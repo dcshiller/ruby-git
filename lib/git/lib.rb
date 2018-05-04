@@ -660,6 +660,13 @@ module Git
       command('merge', arr_opts)
     end
 
+    def rebase(branch, opts = {})
+      arr_opts ||= []
+      arr_opts << '-i' if opts[:interactive]
+      arr_opts += [branch]
+      command('rebase', arr_opts)
+    end
+
     def unmerged
       unmerged = []
       command_lines('diff', ["--cached"]).each do |line|
@@ -932,6 +939,8 @@ module Git
       global_opts = global_opts.flatten.map {|s| escape(s) }.join(' ')
 
       git_cmd = "#{Git::Base.config.binary_path} #{global_opts} #{cmd} #{opts} #{redirect} 2>&1"
+
+      puts git_cmd
 
       output = nil
 
